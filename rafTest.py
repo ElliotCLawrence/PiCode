@@ -32,13 +32,8 @@ ROT_CMPS = 60 # rotation speed in cm per second
 TURN_DELAY = 6.55 / 4 # in seconds 90 degree turns dependent on ROT_CMPS == 60
 FWD_DELAY = 34 / FWD_CMPS # roomba's diameter is 34 cm and adjusting based on FWD_CMPS
 
-# Initialize robot's direction and rotation
-robot_dir = 0;
-robot_rot = 0;
-multiplier = 0;
-
-def move_roomba(multiplier, robot_dir, robot_rot):
-     robot.go(FWD_CMPS * robot_dir * multiplier, ROT_CMPS * robot_rot * multiplier)
+def move_roomba(mult, robot_dir, robot_rot):
+     robot.go(FWD_CMPS * robot_dir * mult, ROT_CMPS * robot_rot * mult)
      if robot_dir == 0:
         time.sleep(TURN_DELAY)
      else: 
@@ -54,52 +49,41 @@ def main():
 	robot.resetPose()
         robot_dir = 0;
         robot_rot = 0;
-        multiplier = 1.0;
+        mult = 1.0;
 	# px, py, th = robot.getPose()
 
 	while True:
+            mult = 1.0;
             input = screen.getch()
-            if input == ' ':
-	        robot_dir = 0;
-                robot_rot = 0;
-                multiplier = 1.0;
-            elif input == ord('p'):
-                break
-            #elif input == ord('r') and FWD_CMPS <= 40:
-                #FWD_CMPS += 1;
-            #elif input == ord('f') and FWD_CMPS > 10:
-               #FWD_CMPS -= 0.1;
+            robot_dir = 0;
+            robot_rot = 0;
+            if input == ord(' '):
+	        break;
 	    elif input == ord('w'):
 		robot_dir = 1;
-                robot_rot = 0;
-                mutliplier = 1.0;
 	    elif input == ord('s'):
 		robot_dir = -1;
-                robot_rot = 0;
-                mutliplier = 1.0;
 	    elif input == ord('a'):
-                robot_dir = 0;
 		robot_rot = 1;
-                mutliplier = 1.0;
+                mult = 1.5;
 	    elif input == ord('d'):
-                robot_dir = 0;
 		robot_rot = -1;
-                mutliplier = 1.0;
+                mult = 1.5;
             elif input == ord('z'):
-                robot_dir = 0;
                 robot_rot = 1;
-                multiplier = 0.3;
+                mult = 0.8;
             elif input == ord('c'):
-                robot_dir = 0;
-                robot_rot =-1;
-                multiplier = 0.3;
-            else:
-                robot_dir = 0;
-                robot_rot = 0;
-                multiplier = 1.0;
+                robot_rot = -1;
+                mult = 0.8;
+            elif input == ord('q'):
+                robot_rot = 1;
+                mult = 0.3;
+            elif input == ord('e'):
+                robot_rot = -1;
+                mult = 0.3;
 
-            move_roomba(multiplier, robot_dir, robot_rot);
-            screen.addch('y')
+            move_roomba(mult, robot_dir, robot_rot);
+            #screen.addch('y')
 
 if __name__ == '__main__': 
     try:    
