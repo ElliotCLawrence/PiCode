@@ -1,4 +1,4 @@
-#
+
 # Directly Plug Keyboard In RaspberryPi 
 # and control with "aswd" (spacebar to stop)
 #
@@ -29,32 +29,25 @@ robot.toSafeMode()
 
 FWD_CMPS = 20 # forward speed in cm per second
 ROT_CMPS = 60 # rotation speed in cm per second
+TURN_DELAY = 6.55 / 4 # in seconds 90 degree turns dependent on ROT_CMPS == 60
+FWD_DELAY = 34 / FWD_CMPS # roomba's diameter is 34 cm and adjusting based on FWD_CMPS
 
 # Initialize robot's direction and rotation
 robot_dir = 0;
 robot_rot = 0;
 multiplier = 0;
 
-def update_roomba_dir(robot_dir, delta):
-    robot_dir += delta;
-    robot.go(robot_dir * FWD_CMPS, 0)
-    time.sleep(0.1) # unsure if this is needed
-    robot_dir = 0;
-
-def update_roomba_rot(robot_rot, delta): 
-    robot_rot += delta;
-    robot.go(0, robot_rot * ROT_CMPS)
-    time.sleep(0.1) #unsure if this is needed
-    robot_rot = 0; 
-
 def move_roomba(multiplier, robot_dir, robot_rot):
      robot.go(FWD_CMPS * robot_dir * multiplier, ROT_CMPS * robot_rot * multiplier)
-     time.sleep(0.1)
-     
+     if robot_dir == 0:
+        time.sleep(TURN_DELAY)
+     else: 
+         time.sleep(FWD_DELAY);
+     robot.go(0,0)
 
 def main():
         screen = curses.initscr()
-        curses.noecho()
+        # curses.noecho()
         curses.cbreak()
         screen.keypad(True)
 
@@ -70,24 +63,43 @@ def main():
 	        robot_dir = 0;
                 robot_rot = 0;
                 multiplier = 1.0;
-            elif input == ord('r') and multiplier <= 3.0:
-                multiplier += 0.1;
-            elif input == ord('f') and multiplier > 0.3:
-                multiplier -= 0.1;
+            elif input == ord('p'):
+                break
+            #elif input == ord('r') and FWD_CMPS <= 40:
+                #FWD_CMPS += 1;
+            #elif input == ord('f') and FWD_CMPS > 10:
+               #FWD_CMPS -= 0.1;
 	    elif input == ord('w'):
 		robot_dir = 1;
+                robot_rot = 0;
+                mutliplier = 1.0;
 	    elif input == ord('s'):
 		robot_dir = -1;
+                robot_rot = 0;
+                mutliplier = 1.0;
 	    elif input == ord('a'):
+                robot_dir = 0;
 		robot_rot = 1;
+                mutliplier = 1.0;
 	    elif input == ord('d'):
+                robot_dir = 0;
 		robot_rot = -1;
+                mutliplier = 1.0;
+            elif input == ord('z'):
+                robot_dir = 0;
+                robot_rot = 1;
+                multiplier = 0.3;
+            elif input == ord('c'):
+                robot_dir = 0;
+                robot_rot =-1;
+                multiplier = 0.3;
             else:
                 robot_dir = 0;
                 robot_rot = 0;
+                multiplier = 1.0;
 
             move_roomba(multiplier, robot_dir, robot_rot);
-            curses.flushinp();
+            screen.addch('y')
 
 if __name__ == '__main__': 
     try:    
