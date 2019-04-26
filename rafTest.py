@@ -29,7 +29,7 @@ robot.toSafeMode()
 
 FWD_CMPS = 20 # forward speed in cm per second
 ROT_CMPS = 60 # rotation speed in cm per second
-TURN_DELAY = 6.55 / 4 # in seconds 90 degree turns dependent on ROT_CMPS == 60
+TURN_DELAY = 6.55 / 6 # in seconds 90 degree turns dependent on ROT_CMPS == 60
 FWD_DELAY = 34 / FWD_CMPS # roomba's diameter is 34 cm and adjusting based on FWD_CMPS
 
 def move_roomba(mult, robot_dir, robot_rot):
@@ -71,16 +71,16 @@ def main():
                 mult = 1.5;
             elif input == ord('z'):
                 robot_rot = 1;
-                mult = 0.8;
+                mult = 1.2;
             elif input == ord('c'):
                 robot_rot = -1;
-                mult = 0.8;
+                mult = 1.2;
             elif input == ord('q'):
                 robot_rot = 1;
-                mult = 0.3;
+                mult = 0.4;
             elif input == ord('e'):
                 robot_rot = -1;
-                mult = 0.3;
+                mult = 0.4;
 
             move_roomba(mult, robot_dir, robot_rot);
             #screen.addch('y')
